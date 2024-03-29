@@ -90,5 +90,9 @@ h1 {
 }
 
 .earned {
-  color: green;
+  color: #00ff88;
+}
+
+.stopped {
+  color: #00ff88;
 }

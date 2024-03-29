@@ -17,6 +17,7 @@ function App() {
     localStorage.getItem("startBalance") || 0
   );
   const [realTimeBalance, setRealTimeBalance] = useState(0); // State for real-time mBlast balance
+  const [timerStopped, setTimerStopped] = useState(false); // State to track if the timer is stopped
 
   useEffect(() => {
     async function fetchData() {
@@ -95,11 +96,13 @@ function App() {
     setStartBalance(greedy ? greedy.mblast_balance : 0);
     localStorage.setItem("startBalance", greedy ? greedy.mblast_balance : 0);
     setTimerStarted(true);
+    setTimerStopped(false); // Reset timer stopped state
     localStorage.setItem("timerStarted", true);
   };
 
   const handleTimerStop = () => {
     setTimerStarted(false);
+    setTimerStopped(true); // Set timer stopped state
     localStorage.setItem("timerStarted", false);
     const now = new Date();
     const elapsedTimeInSeconds = Math.floor((now - new Date(startTime)) / 1000);
@@ -138,8 +141,10 @@ function App() {
         </button>
       )}
 
-      <p className="timer">
-        {timerStarted ? formatTime(elapsedTime) : "Timer stopped"}
+      <p className={timerStarted ? "timer" : "timer stopped"}>
+        {timerStarted || !timerStopped
+          ? formatTime(elapsedTime)
+          : formatTime(elapsedTime)}
       </p>
 
       <div className="card">
