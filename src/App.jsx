@@ -134,6 +134,10 @@ function App() {
         <p>
           Current mBlast: {greedy ? numberWithCommas(greedy.mblast_balance) : 0}
         </p>
+        <p>
+          mBlast Earned:{" "}
+          {numberWithCommas(greedy ? greedy.mblast_balance - startBalance : 0)}
+        </p>
       </div>
     </>
   );
