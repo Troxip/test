@@ -16,7 +16,6 @@ function App() {
   const [startBalance, setStartBalance] = useState(
     localStorage.getItem("startBalance") || 0
   );
-  const [realTimeBalance, setRealTimeBalance] = useState(0); // State for real-time mBlast balance
 
   useEffect(() => {
     async function fetchData() {
@@ -28,13 +27,10 @@ function App() {
       if (data) {
         const test = data.results.filter((data) => data.id === 37446);
         setGreedy(test[0]);
-        if (timerStarted) {
-          setRealTimeBalance(test[0]?.mblast_balance || 0);
-        }
       }
     }
     fetchData();
-  }, [timerStarted]); // Update when timerStarted changes
+  }, []);
 
   useEffect(() => {
     const storedStartTime = localStorage.getItem("startTime");
@@ -62,21 +58,6 @@ function App() {
       );
       setElapsedTime(elapsedTimeInSeconds);
       localStorage.setItem("elapsedTime", elapsedTimeInSeconds);
-
-      // Update real-time balance only when timer is started
-      if (timerStarted) {
-        async function fetchRealTimeBalance() {
-          const res = await fetch(
-            "https://odyn-backend.fly.dev/games/capncouserprofiles/?limit=25&offset=0&ordering=-mblast_balance"
-          );
-          const data = await res.json();
-          if (data) {
-            const test = data.results.filter((data) => data.id === 37446);
-            setRealTimeBalance(test[0]?.mblast_balance || 0);
-          }
-        }
-        fetchRealTimeBalance();
-      }
     };
 
     if (timerStarted) {
@@ -145,7 +126,10 @@ function App() {
       <div className="card">
         <p className="h1">Current Points</p>
         <p>Start Balance: {numberWithCommas(startBalance)}</p>
-        <p>Real-Time mBlast: {numberWithCommas(realTimeBalance)}</p>
+        <p>
+          Real-Time mBlast:{" "}
+          {greedy ? numberWithCommas(greedy.mblast_balance) : 0}
+        </p>
         {
           <p className={!timerStarted && "earned"}>
             mBlast Earned:{" "}
