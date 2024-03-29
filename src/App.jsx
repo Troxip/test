@@ -150,9 +150,7 @@ function App() {
           <p className={!timerStarted && "earned"}>
             mBlast Earned:{" "}
             {numberWithCommas(
-              greedy
-                ? numberWithCommas(greedy.mblast_balance - startBalance)
-                : 0
+              greedy ? numberWithCommas(realTimeBalance - startBalance) : 0
             )}
           </p>
         }
