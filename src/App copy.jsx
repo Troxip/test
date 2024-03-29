@@ -16,6 +16,8 @@ function App() {
   const [startBalance, setStartBalance] = useState(
     localStorage.getItem("startBalance") || 0
   );
+  const [realTimeBalance, setRealTimeBalance] = useState(0); // State for real-time mBlast balance
+  const [timerStopped, setTimerStopped] = useState(false); // State to track if the timer is stopped
 
   useEffect(() => {
     async function fetchData() {
@@ -27,10 +29,13 @@ function App() {
       if (data) {
         const test = data.results.filter((data) => data.id === 37446);
         setGreedy(test[0]);
+        if (timerStarted) {
+          setRealTimeBalance(test[0]?.mblast_balance || 0);
+        }
       }
     }
     fetchData();
-  }, []);
+  }, [timerStarted]); // Update when timerStarted changes
 
   useEffect(() => {
     const storedStartTime = localStorage.getItem("startTime");
@@ -58,6 +63,21 @@ function App() {
       );
       setElapsedTime(elapsedTimeInSeconds);
       localStorage.setItem("elapsedTime", elapsedTimeInSeconds);
+
+      // Update real-time balance only when timer is started
+      if (timerStarted) {
+        async function fetchRealTimeBalance() {
+          const res = await fetch(
+            "https://odyn-backend.fly.dev/games/capncouserprofiles/?limit=25&offset=0&ordering=-mblast_balance"
+          );
+          const data = await res.json();
+          if (data) {
+            const test = data.results.filter((data) => data.id === 37446);
+            setRealTimeBalance(test[0]?.mblast_balance || 0);
+          }
+        }
+        fetchRealTimeBalance();
+      }
     };
 
     if (timerStarted) {
@@ -76,12 +96,15 @@ function App() {
     setStartBalance(greedy ? greedy.mblast_balance : 0);
     localStorage.setItem("startBalance", greedy ? greedy.mblast_balance : 0);
     setTimerStarted(true);
+    setTimerStopped(false); // Reset timer stopped state
     localStorage.setItem("timerStarted", true);
   };
 
   const handleTimerStop = () => {
     setTimerStarted(false);
+    setTimerStopped(true); // Set timer stopped state
     localStorage.setItem("timerStarted", false);
+    localStorage.setItem("realTimeBalance", realTimeBalance); // Store real-time balance in local storage
     const now = new Date();
     const elapsedTimeInSeconds = Math.floor((now - new Date(startTime)) / 1000);
     setElapsedTime(elapsedTimeInSeconds);
@@ -119,27 +142,43 @@ function App() {
         </button>
       )}
 
-      <p className="timer">
-        {timerStarted ? formatTime(elapsedTime) : "Timer stopped"}
+      <p className={timerStarted ? "timer" : "timer stopped"}>
+        {timerStarted || !timerStopped
+          ? formatTime(elapsedTime)
+          : formatTime(elapsedTime)}
       </p>
 
       <div className="card">
         <p className="h1">Current Points</p>
         <p>Start Balance: {numberWithCommas(startBalance)}</p>
-        <p>
-          Real-Time mBlast:{" "}
-          {greedy ? numberWithCommas(greedy.mblast_balance) : 0}
-        </p>
-        {
-          <p className={!timerStarted && "earned"}>
-            mBlast Earned:{" "}
-            {numberWithCommas(
-              greedy
-                ? numberWithCommas(greedy.mblast_balance - startBalance)
-                : 0
-            )}
-          </p>
-        }
+        {timerStarted ? (
+          <>
+            <p>Real-Time mBlast: {numberWithCommas(realTimeBalance)}</p>
+            <p className={timerStopped ? "earned" : ""}>
+              mBlast Earned:{" "}
+              {numberWithCommas(
+                greedy ? numberWithCommas(realTimeBalance - startBalance) : 0
+              )}
+            </p>
+          </>
+        ) : (
+          <>
+            <p>
+              Real-Time mBlast:{" "}
+              {numberWithCommas(localStorage.getItem("realTimeBalance") || 0)}
+            </p>
+            <p className={timerStopped ? "earned" : ""}>
+              mBlast Earned:{" "}
+              {numberWithCommas(
+                localStorage.getItem("realTimeBalance")
+                  ? numberWithCommas(
+                      localStorage.getItem("realTimeBalance") - startBalance
+                    )
+                  : 0
+              )}
+            </p>
+          </>
+        )}
       </div>
     </>
   );
