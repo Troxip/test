@@ -154,7 +154,7 @@ function App() {
         {timerStarted ? (
           <>
             <p>Real-Time mBlast: {numberWithCommas(realTimeBalance)}</p>
-            <p className="earned">
+            <p className={timerStopped ? "earned" : ""}>
               mBlast Earned:{" "}
               {numberWithCommas(
                 greedy ? numberWithCommas(realTimeBalance - startBalance) : 0
