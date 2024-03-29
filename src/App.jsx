@@ -104,6 +104,7 @@ function App() {
     setTimerStarted(false);
     setTimerStopped(true); // Set timer stopped state
     localStorage.setItem("timerStarted", false);
+    localStorage.setItem("realTimeBalance", realTimeBalance); // Store real-time balance in local storage
     const now = new Date();
     const elapsedTimeInSeconds = Math.floor((now - new Date(startTime)) / 1000);
     setElapsedTime(elapsedTimeInSeconds);
@@ -150,15 +151,34 @@ function App() {
       <div className="card">
         <p className="h1">Current Points</p>
         <p>Start Balance: {numberWithCommas(startBalance)}</p>
-        <p>Real-Time mBlast: {numberWithCommas(realTimeBalance)}</p>
-        {
-          <p className={!timerStarted && "earned"}>
-            mBlast Earned:{" "}
-            {numberWithCommas(
-              greedy ? numberWithCommas(realTimeBalance - startBalance) : 0
-            )}
-          </p>
-        }
+        {timerStarted ? (
+          <>
+            <p>Real-Time mBlast: {numberWithCommas(realTimeBalance)}</p>
+            <p className="earned">
+              mBlast Earned:{" "}
+              {numberWithCommas(
+                greedy ? numberWithCommas(realTimeBalance - startBalance) : 0
+              )}
+            </p>
+          </>
+        ) : (
+          <>
+            <p>
+              Real-Time mBlast:{" "}
+              {numberWithCommas(localStorage.getItem("realTimeBalance") || 0)}
+            </p>
+            <p className={timerStopped ? "earned" : ""}>
+              mBlast Earned:{" "}
+              {numberWithCommas(
+                localStorage.getItem("realTimeBalance")
+                  ? numberWithCommas(
+                      localStorage.getItem("realTimeBalance") - startBalance
+                    )
+                  : 0
+              )}
+            </p>
+          </>
+        )}
       </div>
     </>
   );
