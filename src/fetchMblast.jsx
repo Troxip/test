@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 export default function FetchMblast() {
   const [combinedData, setCombinedData] = useState([]);
   const [gr33dyBalance, setGr33dyBalance] = useState(0);
-  const [usernameInput, setUsernameInput] = useState(""); // State to hold the user input
+  const [usernameInput, setUsernameInput] = useState("GR33DY"); // State to hold the user input
 
   const totalBalance = combinedData.reduce((acc, data) => {
     return (
@@ -63,6 +63,7 @@ export default function FetchMblast() {
         value={usernameInput}
         onChange={handleInputChange}
         placeholder="Enter username"
+        className="input"
       />
       <p>Total mBlast: ~{totalBalance && totalBalance.toLocaleString()}</p>
       <p className="greedy">

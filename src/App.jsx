@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import numberWithCommas from "./components/numberFormat";
-import fetchMblast from "./fetchMblast";
 import FetchMblast from "./fetchMblast";
 
 function App() {
@@ -199,7 +198,9 @@ function App() {
 
   return (
     <>
-      <FetchMblast />
+      <div className="absolute">
+        <FetchMblast />
+      </div>
       <div>
         <a target="_blank">
           <img
@@ -209,8 +210,6 @@ function App() {
           />
         </a>
       </div>
-
-      <h1>Captain & Company</h1>
 
       {timerStarted ? (
         <button onClick={handleTimerStop} className="stopButton">

@@ -96,3 +96,13 @@ h1 {
 .stopped {
   color: #00ff88;
 }
+
+.input {
+  margin-top: 5rem;
+}
+
+.absolute {
+  position: absolute;
+  top: 50px;
+  left: 5px;
+}
