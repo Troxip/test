@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 export default function FetchMblast() {
   const [combinedData, setCombinedData] = useState([]);
   const [gr33dyBalance, setGr33dyBalance] = useState(0);
+  const [usernameInput, setUsernameInput] = useState(""); // State to hold the user input
 
   const totalBalance = combinedData.reduce((acc, data) => {
     return (
@@ -31,33 +32,48 @@ export default function FetchMblast() {
         }, []);
 
         setCombinedData(combined);
-
-        // Find mBlast balance for user "GR33DY"
-        const gr33dyUser = combined.find(
-          (user) => user.user.username === "GR33DY"
-        );
-        if (gr33dyUser) {
-          setGr33dyBalance(parseInt(gr33dyUser.mblast_balance));
-        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     }
 
     fetchData();
-  }, []);
+  }, []); // Run only once on component mount
+
+  useEffect(() => {
+    // Find mBlast balance for the entered username
+    const user = combinedData.find(
+      (user) => user.user.username === usernameInput
+    );
+    if (user) {
+      setGr33dyBalance(parseInt(user.mblast_balance));
+    } else {
+      setGr33dyBalance(0); // If user not found, set balance to 0
+    }
+  }, [usernameInput, combinedData]); // Run whenever usernameInput or combinedData changes
+
+  const handleInputChange = (event) => {
+    setUsernameInput(event.target.value);
+  };
 
   return (
     <div className="total">
+      <input
+        type="text"
+        value={usernameInput}
+        onChange={handleInputChange}
+        placeholder="Enter username"
+      />
       <p>Total mBlast: ~{totalBalance && totalBalance.toLocaleString()}</p>
       <p className="greedy">
-        Gr33dy mBlast: {gr33dyBalance && gr33dyBalance.toLocaleString()}
+        {usernameInput && `${usernameInput}'s`} mBlast:{" "}
+        {gr33dyBalance && gr33dyBalance.toLocaleString()}
       </p>
       <p className="greedy">
         {totalBalance &&
           gr33dyBalance &&
           ((gr33dyBalance / totalBalance) * 100).toFixed(2)}
-        % owned by the king Gr33dy
+        % owned by {usernameInput && `${usernameInput}`}
       </p>
     </div>
   );
