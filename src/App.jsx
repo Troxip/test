@@ -139,12 +139,34 @@ function App() {
   };
 
   const calculateEarnings = (mblastPerHour) => {
-    if (mblastPerHour < 1000000) {
+    if (mblastPerHour < 600000) {
+      return 2;
+    } else if (mblastPerHour < 650000) {
+      return 2.25;
+    } else if (mblastPerHour < 700000) {
+      return 3;
+    } else if (mblastPerHour < 750000) {
+      return 3.5;
+    } else if (mblastPerHour < 800000) {
+      return 3.75;
+    } else if (mblastPerHour < 860000) {
+      return 3.9;
+    } else if (mblastPerHour < 900000) {
       return 4;
-    } else if (mblastPerHour < 1200000) {
+    } else if (mblastPerHour < 950000) {
+      return 4.5;
+    } else if (mblastPerHour < 1000000) {
       return 5;
-    } else if (mblastPerHour < 1500000) {
+    } else if (mblastPerHour < 1100000) {
+      return 5.5;
+    } else if (mblastPerHour < 1200000) {
       return 6;
+    } else if (mblastPerHour < 1300000) {
+      return 6.5;
+    } else if (mblastPerHour < 1400000) {
+      return 7;
+    } else if (mblastPerHour < 1500000) {
+      return 7.25;
     } else {
       return 7.5;
     }
@@ -159,7 +181,7 @@ function App() {
   const earningText = () => {
     const mblastPerHour = earnedPerHour();
     const hourlyEarnings = calculateEarnings(mblastPerHour);
-    return `You earned $${hourlyEarnings.toFixed(2)} per hour`;
+    return `Вы заработали $${hourlyEarnings.toFixed(2)} per hour`;
   };
 
   return (
@@ -177,11 +199,11 @@ function App() {
 
       {timerStarted ? (
         <button onClick={handleTimerStop} className="stopButton">
-          Stop
+          Stop / Стоп
         </button>
       ) : (
         <button onClick={handleTimerStart} className="button">
-          Start Timer
+          Start Timer / Начать таймер
         </button>
       )}
 
@@ -192,33 +214,49 @@ function App() {
       </p>
 
       <div className="card">
-        <p className="h1">Current Points</p>
-        <p>Start Balance: {numberWithCommas(startBalance)}</p>
+        <p className="h1">Statistics</p>
+        <p>
+          Start Balance / Начальный баланс:{" "}
+          <span className={timerStopped ? "earned" : ""}>
+            {numberWithCommas(startBalance)}
+          </span>
+        </p>
         {timerStarted ? (
           <>
-            <p>Real-Time mBlast: {numberWithCommas(realTimeBalance)}</p>
-            <p className={timerStopped ? "earned" : ""}>
-              mBlast Earned:{" "}
-              {numberWithCommas(
-                greedy ? numberWithCommas(realTimeBalance - startBalance) : 0
-              )}
+            <p>
+              Real-Time mBlast / В реальном времени mBlast:{" "}
+              <span className={timerStopped ? "earned" : ""}>
+                {numberWithCommas(realTimeBalance)}
+              </span>
+            </p>
+            <p>
+              mBlast Earned / Заработано mBlast:{" "}
+              <span className={timerStopped ? "earned" : ""}>
+                {numberWithCommas(
+                  greedy ? numberWithCommas(realTimeBalance - startBalance) : 0
+                )}
+              </span>
             </p>
           </>
         ) : (
           <>
             <p>
-              Real-Time mBlast:{" "}
-              {numberWithCommas(localStorage.getItem("realTimeBalance") || 0)}
+              Real-Time mBlast / В реальном времени mBlast:{" "}
+              <span className={timerStopped ? "earned" : ""}>
+                {numberWithCommas(localStorage.getItem("realTimeBalance") || 0)}
+              </span>
             </p>
-            <p className={timerStopped ? "earned" : ""}>
-              mBlast Earned:{" "}
-              {numberWithCommas(
-                localStorage.getItem("realTimeBalance")
-                  ? numberWithCommas(
-                      localStorage.getItem("realTimeBalance") - startBalance
-                    )
-                  : 0
-              )}
+            <p>
+              mBlast Earned / Заработано mBlast:{" "}
+              <span className={timerStopped ? "earned" : ""}>
+                {numberWithCommas(
+                  localStorage.getItem("realTimeBalance")
+                    ? numberWithCommas(
+                        localStorage.getItem("realTimeBalance") - startBalance
+                      )
+                    : 0
+                )}
+              </span>
             </p>
           </>
         )}
@@ -226,19 +264,31 @@ function App() {
           <>
             <p>______________________________________</p>
             <p>
-              Earned per hour: {numberWithCommas(Math.round(earnedPerHour()))}{" "}
-              mBlast/hour
+              Earned per hour / Заработано в час:{" "}
+              <span className={timerStopped ? "earned" : ""}>
+                {numberWithCommas(Math.round(earnedPerHour()))} mBlast/hour
+              </span>
             </p>
             <p>
-              Start Time (Russian Time):{" "}
-              {new Date(startTime).toLocaleString("ru-RU", {
-                timeZone: "Europe/Moscow",
-              })}
+              Start Time / Время начала:{" "}
+              <span className={timerStopped ? "earned" : ""}>
+                {new Date(startTime).toLocaleString("ru-RU", {
+                  timeZone: "Europe/Moscow",
+                })}
+              </span>
             </p>
-            <p>End Time (Russian Time): {endTime}</p>
+            <p>
+              End Time / Время окончания:{" "}
+              <span className={timerStopped ? "earned" : ""}>{endTime}</span>
+            </p>
             <p>______________________________________</p>
             <p>{earningText()}</p>
-            <p>Total Earned: ${calculateTotalEarned()}</p>
+            <p>
+              Total Earned / Всего заработано:{" "}
+              <span className={timerStopped ? "earned" : ""}>
+                ${calculateTotalEarned()}
+              </span>
+            </p>
           </>
         )}
       </div>
