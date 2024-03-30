@@ -119,6 +119,13 @@ function App() {
     return `${hours} hours, ${minutes} minutes, ${seconds} seconds`;
   };
 
+  const earnedPerHour = () => {
+    if (elapsedTime === 0) return 0; // To avoid division by zero
+    const earned = realTimeBalance - startBalance;
+    const hours = elapsedTime / 3600; // Convert elapsed time to hours
+    return earned / hours;
+  };
+
   return (
     <>
       <div>
@@ -176,6 +183,15 @@ function App() {
                     )
                   : 0
               )}
+            </p>
+          </>
+        )}
+        {timerStopped && (
+          <>
+            <p>______________________________________</p>
+            <p>
+              Earned per hour: {numberWithCommas(Math.round(earnedPerHour()))}{" "}
+              mBlast/hour
             </p>
           </>
         )}
