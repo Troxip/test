@@ -10,14 +10,15 @@ function App() {
   const [startTime, setStartTime] = useState(
     localStorage.getItem("startTime") || null
   );
+  const [endTime, setEndTime] = useState(null);
   const [elapsedTime, setElapsedTime] = useState(
     parseInt(localStorage.getItem("elapsedTime"), 10) || 0
   );
   const [startBalance, setStartBalance] = useState(
     localStorage.getItem("startBalance") || 0
   );
-  const [realTimeBalance, setRealTimeBalance] = useState(0); // State for real-time mBlast balance
-  const [timerStopped, setTimerStopped] = useState(false); // State to track if the timer is stopped
+  const [realTimeBalance, setRealTimeBalance] = useState(0);
+  const [timerStopped, setTimerStopped] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -35,7 +36,7 @@ function App() {
       }
     }
     fetchData();
-  }, [timerStarted]); // Update when timerStarted changes
+  }, [timerStarted]);
 
   useEffect(() => {
     const storedStartTime = localStorage.getItem("startTime");
@@ -64,7 +65,6 @@ function App() {
       setElapsedTime(elapsedTimeInSeconds);
       localStorage.setItem("elapsedTime", elapsedTimeInSeconds);
 
-      // Update real-time balance only when timer is started
       if (timerStarted) {
         async function fetchRealTimeBalance() {
           const res = await fetch(
@@ -81,11 +81,11 @@ function App() {
     };
 
     if (timerStarted) {
-      intervalId = setInterval(updateTimer, 1000); // Update timer every second
+      intervalId = setInterval(updateTimer, 1000);
     }
 
     return () => {
-      clearInterval(intervalId); // Cleanup interval on component unmount
+      clearInterval(intervalId);
     };
   }, [startTime, timerStarted]);
 
@@ -94,7 +94,6 @@ function App() {
     setStartTime(now.toISOString());
     localStorage.setItem("startTime", now.toISOString());
 
-    // Fetch the newest mblast_balance
     const res = await fetch(
       "https://odyn-backend.fly.dev/games/capncouserprofiles/?limit=25&offset=0&ordering=-mblast_balance"
     );
@@ -107,19 +106,21 @@ function App() {
     }
 
     setTimerStarted(true);
-    setTimerStopped(false); // Reset timer stopped state
+    setTimerStopped(false);
     localStorage.setItem("timerStarted", true);
   };
 
   const handleTimerStop = () => {
     setTimerStarted(false);
-    setTimerStopped(true); // Set timer stopped state
+    setTimerStopped(true);
     localStorage.setItem("timerStarted", false);
-    localStorage.setItem("realTimeBalance", realTimeBalance); // Store real-time balance in local storage
+    localStorage.setItem("realTimeBalance", realTimeBalance);
     const now = new Date();
     const elapsedTimeInSeconds = Math.floor((now - new Date(startTime)) / 1000);
     setElapsedTime(elapsedTimeInSeconds);
     localStorage.setItem("elapsedTime", elapsedTimeInSeconds);
+    setEndTime(now.toLocaleString("ru-RU", { timeZone: "Europe/Moscow" }));
+    localStorage.setItem("endTime", now.toISOString());
   };
 
   const formatTime = (timeInSeconds) => {
@@ -131,10 +132,28 @@ function App() {
   };
 
   const earnedPerHour = () => {
-    if (elapsedTime === 0) return 0; // To avoid division by zero
+    if (elapsedTime === 0) return 0;
     const earned = realTimeBalance - startBalance;
-    const hours = elapsedTime / 3600; // Convert elapsed time to hours
+    const hours = elapsedTime / 3600;
     return earned / hours;
+  };
+
+  const calculateEarnings = (mblastPerHour) => {
+    if (mblastPerHour < 1000000) {
+      return 4;
+    } else if (mblastPerHour < 1200000) {
+      return 5;
+    } else if (mblastPerHour < 1500000) {
+      return 6;
+    } else {
+      return 7.5;
+    }
+  };
+
+  const calculateTotalEarned = () => {
+    const hourlyEarnings = calculateEarnings(earnedPerHour());
+    const totalEarned = hourlyEarnings * (elapsedTime / 3600);
+    return totalEarned.toFixed(2);
   };
 
   return (
@@ -204,6 +223,15 @@ function App() {
               Earned per hour: {numberWithCommas(Math.round(earnedPerHour()))}{" "}
               mBlast/hour
             </p>
+            <p>
+              Start Time (Russian Time):{" "}
+              {new Date(startTime).toLocaleString("ru-RU", {
+                timeZone: "Europe/Moscow",
+              })}
+            </p>
+            <p>End Time (Russian Time): {endTime}</p>
+            <p>______________________________________</p>
+            <p>Total Earned: ${calculateTotalEarned()}</p>
           </>
         )}
       </div>

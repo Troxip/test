@@ -10,6 +10,7 @@ function App() {
   const [startTime, setStartTime] = useState(
     localStorage.getItem("startTime") || null
   );
+  const [endTime, setEndTime] = useState(null); // State to hold end time
   const [elapsedTime, setElapsedTime] = useState(
     parseInt(localStorage.getItem("elapsedTime"), 10) || 0
   );
@@ -89,12 +90,23 @@ function App() {
     };
   }, [startTime, timerStarted]);
 
-  const handleTimerStart = () => {
+  const handleTimerStart = async () => {
     const now = new Date();
     setStartTime(now.toISOString());
     localStorage.setItem("startTime", now.toISOString());
-    setStartBalance(greedy ? greedy.mblast_balance : 0);
-    localStorage.setItem("startBalance", greedy ? greedy.mblast_balance : 0);
+
+    // Fetch the newest mblast_balance
+    const res = await fetch(
+      "https://odyn-backend.fly.dev/games/capncouserprofiles/?limit=25&offset=0&ordering=-mblast_balance"
+    );
+    const data = await res.json();
+    if (data) {
+      const test = data.results.filter((data) => data.id === 37446);
+      setGreedy(test[0]);
+      setStartBalance(test[0]?.mblast_balance || 0);
+      localStorage.setItem("startBalance", test[0]?.mblast_balance || 0);
+    }
+
     setTimerStarted(true);
     setTimerStopped(false); // Reset timer stopped state
     localStorage.setItem("timerStarted", true);
@@ -109,6 +121,8 @@ function App() {
     const elapsedTimeInSeconds = Math.floor((now - new Date(startTime)) / 1000);
     setElapsedTime(elapsedTimeInSeconds);
     localStorage.setItem("elapsedTime", elapsedTimeInSeconds);
+    setEndTime(now.toLocaleString("ru-RU", { timeZone: "Europe/Moscow" })); // Set end time in Russian time
+    localStorage.setItem("endTime", now.toISOString()); // Save end time in storage
   };
 
   const formatTime = (timeInSeconds) => {
@@ -193,6 +207,15 @@ function App() {
               Earned per hour: {numberWithCommas(Math.round(earnedPerHour()))}{" "}
               mBlast/hour
             </p>
+            <p>
+              Start Time (Russian Time):{" "}
+              {new Date(startTime).toLocaleString("ru-RU", {
+                timeZone: "Europe/Moscow",
+              })}
+            </p>
+            <p>End Time (Russian Time): {endTime}</p>
+            <p>______________________________________</p>
+            <p>Total Earned: </p>
           </>
         )}
       </div>
