@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import numberWithCommas from "./components/numberFormat";
 
@@ -21,7 +21,7 @@ function App() {
   const [timerStopped, setTimerStopped] = useState(false);
 
   useEffect(() => {
-    async function fetchData() {
+    const fetchData = async () => {
       const res = await fetch(
         "https://odyn-backend.fly.dev/games/capncouserprofiles/?limit=25&offset=0&ordering=-mblast_balance"
       );
@@ -34,7 +34,8 @@ function App() {
           setRealTimeBalance(test[0]?.mblast_balance || 0);
         }
       }
-    }
+    };
+
     fetchData();
   }, [timerStarted]);
 
@@ -66,7 +67,7 @@ function App() {
       localStorage.setItem("elapsedTime", elapsedTimeInSeconds);
 
       if (timerStarted) {
-        async function fetchRealTimeBalance() {
+        const fetchRealTimeBalance = async () => {
           const res = await fetch(
             "https://odyn-backend.fly.dev/games/capncouserprofiles/?limit=25&offset=0&ordering=-mblast_balance"
           );
@@ -75,7 +76,7 @@ function App() {
             const test = data.results.filter((data) => data.id === 37446);
             setRealTimeBalance(test[0]?.mblast_balance || 0);
           }
-        }
+        };
         fetchRealTimeBalance();
       }
     };
@@ -184,6 +185,16 @@ function App() {
     return `Вы заработали $${hourlyEarnings.toFixed(2)} per hour`;
   };
 
+  useEffect(() => {
+    const reloadPage = () => {
+      window.location.reload();
+    };
+
+    const reloadInterval = setInterval(reloadPage, 15 * 60 * 1000);
+
+    return () => clearInterval(reloadInterval);
+  }, []);
+
   return (
     <>
       <div>
@@ -214,7 +225,7 @@ function App() {
       </p>
 
       <div className="card">
-        <p className="h1">Statistics</p>
+        <p className="h1">Statistics / GG</p>
         <p>
           Start Balance / Начальный баланс:{" "}
           <span className={timerStopped ? "earned" : ""}>
