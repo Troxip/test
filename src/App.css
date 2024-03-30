@@ -54,3 +54,15 @@ body {
 .timer {
   font-size: 20px;
 }
+
+.total {
+  margin-top: -100px;
+  color: rgb(255, 255, 255);
+  font-size: 16px;
+  margin-bottom: 2rem;
+}
+
+.greedy {
+  font-size: 16px;
+  color: greenyellow;
+}
