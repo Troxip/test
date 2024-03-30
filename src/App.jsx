@@ -182,7 +182,7 @@ function App() {
   const earningText = () => {
     const mblastPerHour = earnedPerHour();
     const hourlyEarnings = calculateEarnings(mblastPerHour);
-    return `Вы заработали $${hourlyEarnings.toFixed(2)} per hour`;
+    return `Вы заработали $${hourlyEarnings.toFixed(2)} в час`;
   };
 
   useEffect(() => {
@@ -225,7 +225,7 @@ function App() {
       </p>
 
       <div className="card">
-        <p className="h1">Statistics / GG</p>
+        <p className="h1">Statistics</p>
         <p>
           Start Balance / Начальный баланс:{" "}
           <span className={timerStopped ? "earned" : ""}>
