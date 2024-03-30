@@ -156,6 +156,12 @@ function App() {
     return totalEarned.toFixed(2);
   };
 
+  const earningText = () => {
+    const mblastPerHour = earnedPerHour();
+    const hourlyEarnings = calculateEarnings(mblastPerHour);
+    return `You earned $${hourlyEarnings.toFixed(2)} per hour`;
+  };
+
   return (
     <>
       <div>
@@ -231,6 +237,7 @@ function App() {
             </p>
             <p>End Time (Russian Time): {endTime}</p>
             <p>______________________________________</p>
+            <p>{earningText()}</p>
             <p>Total Earned: ${calculateTotalEarned()}</p>
           </>
         )}
