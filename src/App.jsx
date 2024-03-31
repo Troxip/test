@@ -146,27 +146,27 @@ function App() {
     } else if (mblastPerHour < 650000) {
       return 2.25;
     } else if (mblastPerHour < 700000) {
-      return 3;
+      return 2.5;
     } else if (mblastPerHour < 750000) {
-      return 3.5;
+      return 3;
     } else if (mblastPerHour < 800000) {
-      return 3.75;
+      return 3.33;
     } else if (mblastPerHour < 860000) {
-      return 3.9;
+      return 3.66;
     } else if (mblastPerHour < 900000) {
       return 4;
     } else if (mblastPerHour < 950000) {
-      return 4.5;
+      return 4.25;
     } else if (mblastPerHour < 1000000) {
-      return 5;
+      return 4.75;
     } else if (mblastPerHour < 1100000) {
-      return 5.5;
+      return 5;
     } else if (mblastPerHour < 1200000) {
-      return 6;
+      return 5.5;
     } else if (mblastPerHour < 1300000) {
-      return 6.5;
+      return 6;
     } else if (mblastPerHour < 1400000) {
-      return 7;
+      return 6.5;
     } else if (mblastPerHour < 1500000) {
       return 7.25;
     } else {
