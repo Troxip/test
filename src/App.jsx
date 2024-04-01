@@ -135,7 +135,8 @@ function App() {
 
   const earnedPerHour = () => {
     if (elapsedTime === 0) return 0;
-    const earned = realTimeBalance - startBalance;
+    const earned =
+      realTimeBalance - startBalance - 125000 * (elapsedTime / 3600); // Subtracting 125000 per hour
     const hours = elapsedTime / 3600;
     return earned / hours;
   };
@@ -177,7 +178,7 @@ function App() {
   const calculateTotalEarned = () => {
     const hourlyEarnings = calculateEarnings(earnedPerHour());
     const totalEarned = hourlyEarnings * (elapsedTime / 3600);
-    return totalEarned.toFixed(2);
+    return totalEarned > 0 ? totalEarned.toFixed(2) : 0; // Ensure total earned is not negative
   };
 
   const earningText = () => {
