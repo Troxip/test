@@ -14,7 +14,7 @@ export default function FetchMblast() {
   useEffect(() => {
     async function fetchData() {
       const limit = 25;
-      const offsets = Array.from({ length: 81 }, (_, index) => index * limit); // Generate offsets from 0 to 2000
+      const offsets = Array.from({ length: 2 }, (_, index) => index * limit); // Generate offsets from 0 to 2000
 
       try {
         const responses = await Promise.all(
@@ -58,13 +58,13 @@ export default function FetchMblast() {
 
   return (
     <div className="total">
-      <input
+      {/* <input
         type="text"
         value={usernameInput}
         onChange={handleInputChange}
         placeholder="Enter username"
         className="input"
-      />
+      /> */}
       <p>Total mBlast: ~{totalBalance && totalBalance.toLocaleString()}</p>
       <p className="greedy">
         {usernameInput && `${usernameInput}'s`} mBlast:{" "}

@@ -66,3 +66,13 @@ body {
   font-size: 16px;
   color: greenyellow;
 }
+
+.disabled {
+  background-color: #5f2020;
+  color: black;
+  cursor: wait;
+}
+
+.shipnumber {
+  margin-top: -20px;
+}

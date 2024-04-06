@@ -135,8 +135,7 @@ function App() {
 
   const earnedPerHour = () => {
     if (elapsedTime === 0) return 0;
-    const earned =
-      realTimeBalance - startBalance - 125000 * (elapsedTime / 3600); // Subtracting 125000 per hour
+    const earned = realTimeBalance - startBalance;
     const hours = elapsedTime / 3600;
     return earned / hours;
   };
@@ -178,7 +177,7 @@ function App() {
   const calculateTotalEarned = () => {
     const hourlyEarnings = calculateEarnings(earnedPerHour());
     const totalEarned = hourlyEarnings * (elapsedTime / 3600);
-    return totalEarned > 0 ? totalEarned.toFixed(2) : 0; // Ensure total earned is not negative
+    return totalEarned.toFixed(2);
   };
 
   const earningText = () => {
@@ -210,14 +209,23 @@ function App() {
             alt="Vite logo"
           />
         </a>
+        <h1 className="shipnumber">Первый Корабль</h1>
       </div>
 
       {timerStarted ? (
-        <button onClick={handleTimerStop} className="stopButton">
+        <button
+          onClick={handleTimerStop}
+          className={!realTimeBalance ? "stopButton disabled" : "stopButton"}
+          disabled={!realTimeBalance}
+        >
           Stop / Стоп
         </button>
       ) : (
-        <button onClick={handleTimerStart} className="button">
+        <button
+          onClick={handleTimerStart}
+          disabled={!greedy}
+          className={!greedy ? "button disabled" : "button"}
+        >
           Start Timer / Начать таймер
         </button>
       )}
@@ -275,37 +283,35 @@ function App() {
             </p>
           </>
         )}
-        {timerStopped && (
-          <>
-            <p>______________________________________</p>
-            <p>
-              Earned per hour / Заработано в час:{" "}
-              <span className={timerStopped ? "earned" : ""}>
-                {numberWithCommas(Math.round(earnedPerHour()))} mBlast/hour
-              </span>
-            </p>
-            <p>
-              Start Time / Время начала:{" "}
-              <span className={timerStopped ? "earned" : ""}>
-                {new Date(startTime).toLocaleString("ru-RU", {
-                  timeZone: "Europe/Moscow",
-                })}
-              </span>
-            </p>
-            <p>
-              End Time / Время окончания:{" "}
-              <span className={timerStopped ? "earned" : ""}>{endTime}</span>
-            </p>
-            <p>______________________________________</p>
-            <p>{earningText()}</p>
-            <p>
-              Total Earned / Всего заработано:{" "}
-              <span className={timerStopped ? "earned" : ""}>
-                ${calculateTotalEarned()}
-              </span>
-            </p>
-          </>
-        )}
+        <>
+          <p>______________________________________</p>
+          <p>
+            Earned per hour / Заработано в час:{" "}
+            <span className={timerStopped ? "earned" : ""}>
+              {numberWithCommas(Math.round(earnedPerHour()))} mBlast/hour
+            </span>
+          </p>
+          <p>
+            Start Time / Время начала:{" "}
+            <span className={timerStopped ? "earned" : ""}>
+              {new Date(startTime).toLocaleString("ru-RU", {
+                timeZone: "Europe/Moscow",
+              })}
+            </span>
+          </p>
+          <p>
+            End Time / Время окончания:{" "}
+            <span className={timerStopped ? "earned" : ""}>{endTime}</span>
+          </p>
+          <p>______________________________________</p>
+          <p>{earningText()}</p>
+          <p>
+            Total Earned / Всего заработано:{" "}
+            <span className={timerStopped ? "earned" : ""}>
+              ${calculateTotalEarned()}
+            </span>
+          </p>
+        </>
       </div>
     </>
   );
