@@ -169,8 +169,10 @@ function App() {
       return 6.5;
     } else if (mblastPerHour < 1500000) {
       return 7.25;
-    } else {
+    } else if (mblastPerHour < 1660000) {
       return 7.5;
+    } else {
+      return 7.77;
     }
   };
 
@@ -292,16 +294,48 @@ function App() {
             </span>
           </p>
           <p>
-            Start Time / Время начала:{" "}
+            Start Time (UTC):{" "}
+            <span className={timerStopped ? "earned" : ""}>
+              {new Date(startTime).toLocaleString("en-US", {
+                timeZone: "UTC",
+                hour12: false,
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+              })}
+            </span>{" "}
+            / Время начала (Moscow):{" "}
             <span className={timerStopped ? "earned" : ""}>
               {new Date(startTime).toLocaleString("ru-RU", {
                 timeZone: "Europe/Moscow",
+                hour12: false,
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
               })}
             </span>
           </p>
           <p>
-            End Time / Время окончания:{" "}
-            <span className={timerStopped ? "earned" : ""}>{endTime}</span>
+            End Time (UTC):{" "}
+            <span className={timerStopped ? "earned" : ""}>
+              {new Date(endTime).toLocaleString("en-US", {
+                timeZone: "UTC",
+                hour12: false,
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+              })}
+            </span>{" "}
+            / Время окончания (Moscow):{" "}
+            <span className={timerStopped ? "earned" : ""}>
+              {new Date(endTime).toLocaleString("ru-RU", {
+                timeZone: "Europe/Moscow",
+                hour12: false,
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+              })}
+            </span>
           </p>
           <p>______________________________________</p>
           <p>{earningText()}</p>

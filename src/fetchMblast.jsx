@@ -58,6 +58,8 @@ export default function FetchMblast() {
 
   return (
     <div className="total">
+      <span>mBlast Supply: </span>
+      <a href="https://mblast-supply.netlify.app/">Check mBlast Supply</a>
       {/* <input
         type="text"
         value={usernameInput}
@@ -65,7 +67,7 @@ export default function FetchMblast() {
         placeholder="Enter username"
         className="input"
       /> */}
-      <p>Total mBlast: ~{totalBalance && totalBalance.toLocaleString()}</p>
+      {/* <p>Total mBlast: ~{totalBalance && totalBalance.toLocaleString()}</p>
       <p className="greedy">
         {usernameInput && `${usernameInput}'s`} mBlast:{" "}
         {gr33dyBalance && gr33dyBalance.toLocaleString()}
@@ -75,7 +77,7 @@ export default function FetchMblast() {
           gr33dyBalance &&
           ((gr33dyBalance / totalBalance) * 100).toFixed(2)}
         % owned by {usernameInput && `${usernameInput}`}
-      </p>
+      </p> */}
     </div>
   );
 }
