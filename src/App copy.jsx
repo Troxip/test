@@ -147,25 +147,23 @@ function App() {
     } else if (mblastPerHour >= 1650000) {
       return 7.25;
     } else if (mblastPerHour >= 1600000) {
-      return 6.75;
+      return 7;
     } else if (mblastPerHour >= 1550000) {
-      return 6.5;
+      return 6.75;
     } else if (mblastPerHour >= 1500000) {
-      return 6;
+      return 6.5;
     } else if (mblastPerHour >= 1400000) {
-      return 5.5;
+      return 6;
     } else if (mblastPerHour >= 1300000) {
-      return 5;
+      return 5.5;
     } else if (mblastPerHour >= 1200000) {
-      return 4.25;
+      return 5;
     } else if (mblastPerHour >= 1100000) {
-      return 3.75;
+      return 4.5;
     } else if (mblastPerHour >= 1000000) {
-      return 3.25;
-    } else if (mblastPerHour >= 880000) {
-      return 2;
+      return 4;
     } else {
-      return 0;
+      return 2;
     }
   };
 
